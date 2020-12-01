@@ -4,22 +4,33 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 )
 
+// https://tutorialedge.net/golang/improving-your-tests-with-testify-go/
 type Repl struct {
 	in       io.Reader
 	out      io.Writer
 	commands map[string]Command
 }
 
-func NewRepl(in io.Reader, out io.Writer) Repl {
-	return Repl{
-		in:  in,
-		out: out,
-		commands: map[string]Command{
+func NewRepl() Repl {
+	out := os.Stdout
+	return NewReplWith(
+		os.Stdin,
+		out,
+		map[string]Command{
 			"help": NewHelp(out),
 		},
+	)
+}
+
+func NewReplWith(in io.Reader, out io.Writer, commands map[string]Command) Repl {
+	return Repl{
+		in:       in,
+		out:      out,
+		commands: commands,
 	}
 }
 
@@ -45,7 +56,6 @@ func isExit(command string) bool {
 
 func (r Repl) Start() {
 	reader := bufio.NewReader(r.in)
-	r.commands["help"].Execute("")
 	printPrompt(r.out)
 	commandText := readCommand(reader)
 	for ; !isExit(commandText); commandText = readCommand(reader) {
