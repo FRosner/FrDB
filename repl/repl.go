@@ -7,6 +7,22 @@ import (
 	"strings"
 )
 
+type Repl struct {
+	in       io.Reader
+	out      io.Writer
+	commands map[string]Command
+}
+
+func NewRepl(in io.Reader, out io.Writer) Repl {
+	return Repl{
+		in:  in,
+		out: out,
+		commands: map[string]Command{
+			"help": NewHelp(out),
+		},
+	}
+}
+
 func printPrompt(out io.Writer) {
 	_, _ = fmt.Fprint(out, "FrDB> ")
 }
@@ -27,19 +43,18 @@ func isExit(command string) bool {
 	return strings.EqualFold("exit", command)
 }
 
-func Start(in io.Reader, out io.Writer) {
-	reader := bufio.NewReader(in)
-	Help(out)
-	printPrompt(out)
-	command := readCommand(reader)
-	for ; !isExit(command); command = readCommand(reader) {
-		switch command {
-		case "help":
-			Help(out)
-		default:
-			printInvalidCommand(out, command)
+func (r Repl) Start() {
+	reader := bufio.NewReader(r.in)
+	r.commands["help"].Execute("")
+	printPrompt(r.out)
+	commandText := readCommand(reader)
+	for ; !isExit(commandText); commandText = readCommand(reader) {
+		if command, commandExists := r.commands[commandText]; commandExists {
+			command.Execute("") // FIXME split in command and arguments
+		} else {
+			printInvalidCommand(r.out, commandText)
 		}
-		printPrompt(out)
+		printPrompt(r.out)
 	}
-	_, _ = fmt.Fprintln(out, "Bye!")
+	_, _ = fmt.Fprintln(r.out, "Bye!")
 }

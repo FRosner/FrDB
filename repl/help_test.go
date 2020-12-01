@@ -9,7 +9,7 @@ import (
 
 func TestHelp(t *testing.T) {
 	var out bytes.Buffer
-	repl.Help(&out)
+	repl.NewHelp(&out).Execute("")
 	assert.Equal(t, out.String(), `Available commands:
   - help: shows this text
   - exit: exits the REPL
