@@ -2,9 +2,11 @@ package main
 
 import (
 	"github.com/frosner/frdb/repl"
+	"io"
 	"os"
 )
 
 func main() {
-	repl.Start(os.Stdin, os.Stdout)
+	var in io.Reader = os.Stdin
+	repl.Start(in, os.Stdout)
 }

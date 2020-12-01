@@ -3,6 +3,7 @@ package repl
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -27,19 +28,17 @@ func isExit(command string) bool {
 	return strings.EqualFold("exit", command)
 }
 
-func Start(in *os.File, out *os.File) {
-	commands := map[string]interface{}{
-		"help": Help,
-	}
+func Start(in io.Reader, out *os.File) {
 	reader := bufio.NewReader(in)
 	Help(out)
 	printPrompt(out)
-	text := readCommand(reader)
-	for ; !isExit(text); text = readCommand(reader) {
-		if command, commandExists := commands[text]; commandExists {
-			command.(func())()
-		} else {
-			printInvalidCommand(out, text)
+	command := readCommand(reader)
+	for ; !isExit(command); command = readCommand(reader) {
+		switch command {
+		case "help":
+			Help(out)
+		default:
+			printInvalidCommand(out, command)
 		}
 		printPrompt(out)
 	}
