@@ -22,6 +22,8 @@ func NewRepl() Repl {
 		out,
 		map[string]Command{
 			"help": NewHelp(out),
+			"get":  NewGet(out),
+			"put":  NewPut(out),
 		},
 	)
 }

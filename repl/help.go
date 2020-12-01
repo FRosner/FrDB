@@ -18,7 +18,9 @@ func NewHelp(out io.Writer) Help {
 func (h Help) Execute(arguments string) {
 	_, _ = fmt.Fprintln(h.out,
 		`Available commands:
-  - help: shows this text
-  - exit: exits the REPL`,
+  - help:               shows this text
+  - get <key>:          retrieves the value stored behind <key>
+  - put <key> <value>:  stores <value> behind <key>
+  - exit:               exits the REPL`,
 	)
 }

@@ -11,7 +11,9 @@ func TestHelp(t *testing.T) {
 	var out bytes.Buffer
 	repl.NewHelp(&out).Execute("")
 	assert.Equal(t, out.String(), `Available commands:
-  - help: shows this text
-  - exit: exits the REPL
+  - help:               shows this text
+  - get <key>:          retrieves the value stored behind <key>
+  - put <key> <value>:  stores <value> behind <key>
+  - exit:               exits the REPL
 `)
 }
