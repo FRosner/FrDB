@@ -16,7 +16,7 @@ func (m *MockCommand) Execute(arguments string) {
 	m.Called(arguments)
 }
 
-func TestReplExecutesCommandAndExits(t *testing.T) {
+func TestReplExecutesCommandAndExits_CommandWithoutArgs(t *testing.T) {
 	var in bytes.Buffer
 	var out bytes.Buffer
 	mockCommand := new(MockCommand)
@@ -30,6 +30,22 @@ func TestReplExecutesCommandAndExits(t *testing.T) {
 	in.WriteString("exit\n")
 	repl.Start()
 	mockCommand.AssertCalled(t, "Execute", "")
+}
+
+func TestReplExecutesCommandAndExits_CommandWithArgs(t *testing.T) {
+	var in bytes.Buffer
+	var out bytes.Buffer
+	mockCommand := new(MockCommand)
+	commands := map[string]repl.Command{
+		"cmd1": mockCommand,
+	}
+	repl := repl.NewReplWith(&in, &out, commands)
+
+	mockCommand.On("Execute", "arg1 arg2").Return()
+	in.WriteString("cmd1 arg1 arg2\n")
+	in.WriteString("exit\n")
+	repl.Start()
+	mockCommand.AssertCalled(t, "Execute", "arg1 arg2")
 }
 
 func TestReplHandlesUnknownCommands(t *testing.T) {

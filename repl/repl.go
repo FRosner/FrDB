@@ -45,9 +45,15 @@ func printInvalidCommand(out io.Writer, command string) {
 	}
 }
 
-func readCommand(r *bufio.Reader) string {
-	t, _ := r.ReadString('\n')
-	return strings.TrimSpace(t)
+func readCommand(r *bufio.Reader) (command string, arguments string) {
+	raw, _ := r.ReadString('\n')
+	trimmed := strings.TrimSpace(raw)
+	split := strings.SplitN(trimmed, " ", 2)
+	if len(split) == 1 {
+		return split[0], ""
+	} else {
+		return split[0], split[1]
+	}
 }
 
 func isExit(command string) bool {
@@ -57,10 +63,10 @@ func isExit(command string) bool {
 func (r Repl) Start() {
 	reader := bufio.NewReader(r.in)
 	printPrompt(r.out)
-	commandText := readCommand(reader)
-	for ; !isExit(commandText); commandText = readCommand(reader) {
+	commandText, commandArguments := readCommand(reader)
+	for ; !isExit(commandText); commandText, commandArguments = readCommand(reader) {
 		if command, commandExists := r.commands[commandText]; commandExists {
-			command.Execute("") // FIXME split in command and arguments
+			command.Execute(commandArguments)
 		} else {
 			printInvalidCommand(r.out, commandText)
 		}
