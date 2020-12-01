@@ -2,10 +2,10 @@ package repl
 
 import (
 	"fmt"
-	"os"
+	"io"
 )
 
-func Help(out *os.File) {
+func Help(out io.Writer) {
 	_, _ = fmt.Fprintln(out,
 		`Available commands:
   - help: shows this text

@@ -4,15 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 )
 
-func printPrompt(out *os.File) {
+func printPrompt(out io.Writer) {
 	_, _ = fmt.Fprint(out, "FrDB> ")
 }
 
-func printInvalidCommand(out *os.File, command string) {
+func printInvalidCommand(out io.Writer, command string) {
 	trimmedCommand := strings.TrimSuffix(command, "\n")
 	if trimmedCommand != "" {
 		_, _ = fmt.Fprintln(out, "Unknown command: "+trimmedCommand)
@@ -28,7 +27,7 @@ func isExit(command string) bool {
 	return strings.EqualFold("exit", command)
 }
 
-func Start(in io.Reader, out *os.File) {
+func Start(in io.Reader, out io.Writer) {
 	reader := bufio.NewReader(in)
 	Help(out)
 	printPrompt(out)
