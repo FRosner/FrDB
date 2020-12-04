@@ -7,6 +7,10 @@
 - https://medium.com/@yewang2018/embedded-kv-store-in-go-and-basic-internal-data-structure-understanding-b-tree-lsm-tree-783a23e3d7bd
 - [Writing a sqlite clone from scratch in C](https://cstack.github.io/db_tutorial/)
 - [Writing a simple REPL in Go](http://diego-pacheco.blogspot.com/2018/07/writing-simple-repl-in-go.html)
+- [Writing a SQL database from scratch in Go](https://notes.eatonphil.com/database-basics.html)
+- [Lessons Learned While Implementing a B+Tree](https://hackthology.com/lessons-learned-while-implementing-a-btree.html) / [fs2 - File Structures 2](https://github.com/timtadh/fs2#b-tree)
+- [NutsDB](https://github.com/xujiajun/nutsdb)
+- [wal.go](https://github.com/tidwall/wal/blob/master/wal.go)
 
 
 ## Videos
